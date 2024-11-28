@@ -9,8 +9,10 @@ using System.Text.RegularExpressions;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 ProfilController Profils = new ProfilController();
-ExamController exams = new ExamController();
 QuestionController questions = new();
+ExamController exams = new(questions);
+ExamController newExam = new();
+StudentController students = new();
 
 #region Profils
 Profil Admin = new("Eltun", "Memmedli", "eltun.memmedli.06@gmail.com", "Eltun2006", ProfilCategory.Admin);
@@ -39,9 +41,9 @@ Profils.AddUser(User_10);
 #endregion
 
 #region Riyaziyyat
-Question math_questions_1 = new("15 ile 8-in ceminden 5-i çıxın.", "18", "23", "20", "C", ExamCategory.Riyaziyyat);
+Question math_questions_1 = new("15 ile 8-in ceminden 5-i çıxın.", "18", "23", "20", "A", ExamCategory.Riyaziyyat);
 Question math_questions_2 = new("36-nın kvadrat kokunu tapın.", "6", "5", "9", "A", ExamCategory.Riyaziyyat);
-Question math_questions_3 = new("7 ile 3-ü vurun və neticeni 5-e bölün.", "5", "4", "6", "A", ExamCategory.Riyaziyyat);
+Question math_questions_3 = new("7 ile 6-ü vurun və neticeni 3-e bölün.", "12", "14", "16", "B", ExamCategory.Riyaziyyat);
 
 RiyaziyyatController riyaziyyat = new RiyaziyyatController();
 
@@ -130,7 +132,7 @@ if(int.TryParse(Option, out option) && option > 0 && option < 4)
                     //Admin
                     if (email.ToLower() == Admin.Email)
                     {
-                        Admin_Menu:
+                    Admin_Menu:
                         Console.Clear();
                         Console.WriteLine($"Welcome {Admin.Name}\n" +
                                           $"1.Show All Users,\n" +
@@ -144,7 +146,7 @@ if(int.TryParse(Option, out option) && option > 0 && option < 4)
                                           $"----------------------------------");
                         string Menu = Console.ReadLine();
                         int menu;
-                        if(int.TryParse(Menu, out menu) && menu > 0 && menu < 9)
+                        if (int.TryParse(Menu, out menu) && menu > 0 && menu < 9)
                         {
                             if (menu == 1)
                             {
@@ -326,31 +328,31 @@ if(int.TryParse(Option, out option) && option > 0 && option < 4)
                                 }
                             }
 
-                            else if(menu == 5)
+                            else if (menu == 5)
                             {
                                 ArrayList NewRiyaziyyat = riyaziyyat.GetQuestions();
                                 ArrayList NewIT = IT.GetQuestions();
                                 ArrayList NewTarix = Tarix.GetQuestions();
                                 int s = 0;
                                 Console.Clear();
-                                Category:
+                            Category:
                                 Console.WriteLine("Please, enter category of the questions");
                                 string Category = Console.ReadLine();
                                 if (!(string.IsNullOrEmpty(Category)))
                                 {
-                                    if(Category.ToLower() == ExamCategory.Tarix.ToString().ToLower())
+                                    if (Category.ToLower() == ExamCategory.Tarix.ToString().ToLower())
                                     {
                                         Console.Clear();
                                         s = NewTarix.Count;
                                         Tarix.ShowQuestions();
                                     }
-                                    else if(Category.ToLower() == ExamCategory.Riyaziyyat.ToString().ToLower())
+                                    else if (Category.ToLower() == ExamCategory.Riyaziyyat.ToString().ToLower())
                                     {
                                         Console.Clear();
                                         s = NewTarix.Count;
                                         riyaziyyat.ShowQuestions();
                                     }
-                                    else if(Category.ToLower() == ExamCategory.IT.ToString().ToLower())
+                                    else if (Category.ToLower() == ExamCategory.IT.ToString().ToLower())
                                     {
                                         Console.Clear();
                                         s = NewIT.Count;
@@ -364,11 +366,11 @@ if(int.TryParse(Option, out option) && option > 0 && option < 4)
                                     }
 
 
-                                    
+
                                     Console.WriteLine("Please, enter the ID of the question");
                                     string id = Console.ReadLine();
                                     int ID;
-                                    if(int.TryParse(id, out ID) && ID <= s && ID > 0)
+                                    if (int.TryParse(id, out ID) && ID <= s && ID > 0)
                                     {
                                         Console.Clear();
                                         Console.WriteLine("Enter the new question");
@@ -461,10 +463,10 @@ if(int.TryParse(Option, out option) && option > 0 && option < 4)
                                 }
                             }
 
-                            else if(menu == 6)
+                            else if (menu == 6)
                             {
                                 Console.Clear();
-                                category:
+                            category:
                                 Console.WriteLine("Enter the category");
                                 string category = Console.ReadLine();
                                 if (!(string.IsNullOrEmpty(category)))
@@ -494,7 +496,7 @@ if(int.TryParse(Option, out option) && option > 0 && option < 4)
                                                     string thruevariant = Console.ReadLine();
                                                     if (!(string.IsNullOrEmpty(thruevariant)))
                                                     {
-                                                        if(category.ToLower() == ExamCategory.Tarix.ToString().ToLower())
+                                                        if (category.ToLower() == ExamCategory.Tarix.ToString().ToLower())
                                                         {
                                                             Tarix.AddNewQuestion(category, question, firstvariant, secondavriant, thirdvariant, thruevariant);
                                                         AnaMenuKecini:
@@ -512,7 +514,7 @@ if(int.TryParse(Option, out option) && option > 0 && option < 4)
 
                                                             }
                                                         }
-                                                        else if(category.ToLower() == ExamCategory.Riyaziyyat.ToString().ToLower())
+                                                        else if (category.ToLower() == ExamCategory.Riyaziyyat.ToString().ToLower())
                                                         {
                                                             riyaziyyat.AddNewQuestion(category, question, firstvariant, secondavriant, thirdvariant, thruevariant);
                                                         AnaMenuKecini:
@@ -531,7 +533,7 @@ if(int.TryParse(Option, out option) && option > 0 && option < 4)
                                                             }
 
                                                         }
-                                                        else if(category.ToLower() == ExamCategory.IT.ToString().ToLower())
+                                                        else if (category.ToLower() == ExamCategory.IT.ToString().ToLower())
                                                         {
                                                             IT.AddNewQuestion(category, question, firstvariant, secondavriant, thirdvariant, thruevariant);
                                                         AnaMenuKecini:
@@ -563,14 +565,16 @@ if(int.TryParse(Option, out option) && option > 0 && option < 4)
                                 }
                             }
 
-                            else if(menu == 7)
+                            else if (menu == 7)
                             {
                                 Console.Clear();
                                 exams.ShowExams();
                             }
-                            else if(menu == 8)
-                            {
 
+                            else if (menu == 8)
+                            {
+                                Console.Clear();
+                                students.ShowStudents();
                             }
                         }
                         else
@@ -584,16 +588,17 @@ if(int.TryParse(Option, out option) && option > 0 && option < 4)
                     //User
                     else
                     {
-                        User_Menu:
+                        Console.Clear();
+                    User_Menu:
                         Console.WriteLine("1.Start the exam,\n" +
                                           "2.See result,\n" +
                                           "3.Log out\n" +
                                           "---------------------");
                         string Secim = Console.ReadLine();
                         int secim;
-                        if(int.TryParse(Secim, out secim) && secim > 0 && secim < 4)
+                        if (int.TryParse(Secim, out secim) && secim > 0 && secim < 4)
                         {
-                            if(secim == 1)
+                            if (secim == 1)
                             {
                                 Console.Clear();
                                 Console.WriteLine("Enter your name");
@@ -606,6 +611,7 @@ if(int.TryParse(Option, out option) && option > 0 && option < 4)
                                     if (!(string.IsNullOrEmpty(surname)))
                                     {
                                         Console.Clear();
+                                    category:
                                         Console.WriteLine("1.Tarix\n" +
                                                           "2.Riyaziyyat\n" +
                                                           "3.IT\n" +
@@ -613,12 +619,79 @@ if(int.TryParse(Option, out option) && option > 0 && option < 4)
                                         string category = Console.ReadLine();
                                         if (!(string.IsNullOrEmpty(category)))
                                         {
-                                            exams.StartExam(name, surname, category);
 
+                                            Console.Clear();
+                                            exams.StartExam(name, surname, category);
+                                            students.AddStudents(name, surname);
+
+                                            if (category.ToLower() == ExamCategory.Riyaziyyat.ToString().ToLower())
+                                            {
+                                                Exam exam = new(DateTime.Today, ExamCategory.Riyaziyyat);
+
+                                                newExam.CollectExams(exam);
+                                            }
+                                            else if (category.ToLower() == ExamCategory.Tarix.ToString().ToLower())
+                                            {
+                                                Exam exam = new(DateTime.Today, ExamCategory.Tarix);
+                                                newExam.CollectExams(exam);
+                                            }
+                                            else if (category.ToLower() == ExamCategory.IT.ToString().ToLower())
+                                            {
+                                                Exam exam = new(DateTime.Today, ExamCategory.IT);
+                                                newExam.CollectExams(exam);
+
+                                            }
+                                            else
+                                            {
+                                                Console.Clear();
+                                                Console.WriteLine("Can not find category!");
+                                                goto category;
+                                            }
+                                        AnaMenuKecini:
+                                            Console.WriteLine("\nPress 'f' to return Main Menu");
+                                            string AnaMenu = Console.ReadLine();
+                                            if (!(string.IsNullOrEmpty(AnaMenu)) && AnaMenu.ToLower() == "F".ToLower())
+                                            {
+                                                Console.Clear();
+                                                goto User_Menu;
+                                            }
+                                            else
+                                            {
+                                                Console.Clear();
+                                                Console.WriteLine("Be sure to press correct button!");
+
+                                            }
                                         }
                                     }
                                 }
-                               
+
+
+                            }
+
+                            else if (secim == 2)
+                            {
+                                Console.Clear();
+                                exams.SeeResults();
+                            AnaMenuKecini:
+                                Console.WriteLine("\nPress 'f' to return Main Menu");
+                                string AnaMenu = Console.ReadLine();
+                                if (!(string.IsNullOrEmpty(AnaMenu)) && AnaMenu.ToLower() == "F".ToLower())
+                                {
+                                    Console.Clear();
+                                    goto User_Menu;
+                                }
+                                else
+                                {
+                                    Console.Clear();
+                                    Console.WriteLine("Be sure to press correct button!");
+
+                                }
+                            }
+
+                            else if (secim == 3)
+                            {
+                                Console.Clear();
+                                goto Main_Menu;
                             }
                         }
 
@@ -637,6 +710,233 @@ if(int.TryParse(Option, out option) && option > 0 && option < 4)
             Console.Clear();
             Console.WriteLine("Try again!");
             goto email;
+        }
+    }
+
+    else if (option == 2)
+    {
+        Console.Clear();
+    name:
+        Console.WriteLine("Adinizi daxil edin");
+        string name = Console.ReadLine();
+        if (!(string.IsNullOrEmpty(name)))
+        {
+            Console.Clear();
+        Soyad:
+            Console.WriteLine("Soyadinizi daxil edin");
+            string surname = Console.ReadLine();
+            if (!(string.IsNullOrEmpty(surname)))
+            {
+                Console.Clear();
+            email:
+                string pattern = @"^[a-zA-Z0-9._%+-]+@gmail\.com$";
+                Regex regex = new Regex(pattern);
+
+
+                Console.WriteLine("Please, enter your email");
+                string email = Console.ReadLine();
+                Console.Clear();
+
+                bool Ismatch = regex.IsMatch(email);
+
+                if (!(string.IsNullOrEmpty(email)) && Ismatch)
+                {
+                    Console.Clear();
+                Password:
+                    Console.WriteLine("Sifreni daxil edin");
+                    string password = Console.ReadLine();
+                    if (!(string.IsNullOrEmpty(password)))
+                    {
+                        Profil NewProfile = new(name, surname, email, password, ProfilCategory.User);
+                        bool valid = Profils.AddNewUser(NewProfile);
+                        if (valid is false)
+                        {
+                            Console.Clear();
+                            Console.WriteLine("Duzgun daxil edin");
+                            goto name;
+                        }
+                        else
+                        {
+                            Console.Clear();
+                        User_Menu:
+                            Console.WriteLine("1.Start the exam,\n" +
+                                              "2.See result,\n" +
+                                              "3.Log out\n" +
+                                              "---------------------");
+                            string Secim = Console.ReadLine();
+                            int secim;
+                            if (int.TryParse(Secim, out secim) && secim > 0 && secim < 4)
+                            {
+                                if (secim == 1)
+                                {
+                                    Console.Clear();
+                                    Console.WriteLine("Enter your name");
+                                    string name_1 = Console.ReadLine();
+                                    if (!(string.IsNullOrEmpty(name)))
+                                    {
+                                        Console.Clear();
+                                        Console.WriteLine("Enter your surname");
+                                        string surname_1 = Console.ReadLine();
+                                        if (!(string.IsNullOrEmpty(surname)))
+                                        {
+                                            Console.Clear();
+                                        category:
+                                            Console.WriteLine("1.Tarix\n" +
+                                                              "2.Riyaziyyat\n" +
+                                                              "3.IT\n" +
+                                                              "---Write the category-----\n");
+                                            string category = Console.ReadLine();
+                                            if (!(string.IsNullOrEmpty(category)))
+                                            {
+
+                                                Console.Clear();
+                                                exams.StartExam(name_1, surname_1, category);
+                                                students.AddStudents(name_1, surname_1);
+
+                                                if (category.ToLower() == ExamCategory.Riyaziyyat.ToString().ToLower())
+                                                {
+                                                    Exam exam = new(DateTime.Today, ExamCategory.Riyaziyyat);
+
+                                                    newExam.CollectExams(exam);
+                                                }
+                                                else if (category.ToLower() == ExamCategory.Tarix.ToString().ToLower())
+                                                {
+                                                    Exam exam = new(DateTime.Today, ExamCategory.Tarix);
+                                                    newExam.CollectExams(exam);
+                                                }
+                                                else if (category.ToLower() == ExamCategory.IT.ToString().ToLower())
+                                                {
+                                                    Exam exam = new(DateTime.Today, ExamCategory.IT);
+                                                    newExam.CollectExams(exam);
+
+                                                }
+                                                else
+                                                {
+                                                    Console.Clear();
+                                                    Console.WriteLine("Can not find category!");
+                                                    goto category;
+                                                }
+                                            AnaMenuKecini:
+                                                Console.WriteLine("\nPress 'f' to return Main Menu");
+                                                string AnaMenu = Console.ReadLine();
+                                                if (!(string.IsNullOrEmpty(AnaMenu)) && AnaMenu.ToLower() == "F".ToLower())
+                                                {
+                                                    Console.Clear();
+                                                    goto User_Menu;
+                                                }
+                                                else
+                                                {
+                                                    Console.Clear();
+                                                    Console.WriteLine("Be sure to press correct button!");
+
+                                                }
+                                            }
+                                        }
+                                    }
+
+
+                                }
+
+                                else if (secim == 2)
+                                {
+                                    Console.Clear();
+                                    exams.SeeResults();
+                                AnaMenuKecini:
+                                    Console.WriteLine("\nPress 'f' to return Main Menu");
+                                    string AnaMenu = Console.ReadLine();
+                                    if (!(string.IsNullOrEmpty(AnaMenu)) && AnaMenu.ToLower() == "F".ToLower())
+                                    {
+                                        Console.Clear();
+                                        goto User_Menu;
+                                    }
+                                    else
+                                    {
+                                        Console.Clear();
+                                        Console.WriteLine("Be sure to press correct button!");
+
+                                    }
+                                }
+
+                                else if (secim == 3)
+                                {
+                                    Console.Clear();
+                                    goto Main_Menu;
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    else if (option == 3)
+    {
+        Console.Clear();
+    Menu:
+        Console.WriteLine("Welecome!\n" +
+                          "1.Give an Exam\n" +
+                          "--------------------------");
+        string sec = Console.ReadLine();
+        int Sec;
+        if (int.TryParse(sec, out Sec) && Sec > 0 && Sec < 2)
+        {
+        category:
+            Console.WriteLine("1.Tarix\n" +
+                              "2.Riyaziyyat\n" +
+                              "3.IT\n" +
+                              "---Write the category-----\n");
+            string category = Console.ReadLine();
+            if (!(string.IsNullOrEmpty(category)))
+            {
+
+                Console.Clear();
+
+                if (category.ToLower() == ExamCategory.Riyaziyyat.ToString().ToLower())
+                {
+                    Exam exam = new(DateTime.Today, ExamCategory.Riyaziyyat);
+
+                    newExam.CollectExams(exam);
+                }
+                else if (category.ToLower() == ExamCategory.Tarix.ToString().ToLower())
+                {
+                    Exam exam = new(DateTime.Today, ExamCategory.Tarix);
+                    newExam.CollectExams(exam);
+                }
+                else if (category.ToLower() == ExamCategory.IT.ToString().ToLower())
+                {
+                    Exam exam = new(DateTime.Today, ExamCategory.IT);
+                    newExam.CollectExams(exam);
+
+                }
+                else
+                {
+                    Console.Clear();
+                    Console.WriteLine("Can not find category!");
+                    goto category;
+                }
+            AnaMenuKecini:
+                Console.WriteLine("\nPress 'f' to return Main Menu");
+                string AnaMenu = Console.ReadLine();
+                if (!(string.IsNullOrEmpty(AnaMenu)) && AnaMenu.ToLower() == "F".ToLower())
+                {
+                    Console.Clear();
+                    goto Main_Menu;
+                }
+                else
+                {
+                    Console.Clear();
+                    Console.WriteLine("Be sure to press correct button!");
+
+                }
+            }
+            else
+            {
+                Console.Clear();
+                Console.WriteLine("Try again!");
+                goto Menu;
+            }
         }
     }
 }

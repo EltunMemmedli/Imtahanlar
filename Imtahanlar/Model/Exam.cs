@@ -14,7 +14,6 @@ namespace Imtahanlar.Model
         public DateTime Date { get; set; }
         public int ID { get; set; }
         public ExamCategory Category { get; set; }
-        public ArrayList UserList { get; set; }
 
         public Exam(DateTime Time, ExamCategory category)
         {
@@ -43,11 +42,6 @@ namespace Imtahanlar.Model
             this.Category = category;
         }
 
-        public void AddExams(Profil profile)
-        {
-            UserList.Add(profile.ID);
-            UserList.Add(profile.Name);
-            UserList.Add(profile.Surname);
-        }
+
     }
 }

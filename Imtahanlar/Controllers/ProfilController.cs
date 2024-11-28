@@ -14,8 +14,6 @@ namespace Imtahanlar.Controllers
     {
         ArrayList Profils;
 
-        
-
         public ProfilController()
         {
             Profils = new ArrayList();
@@ -57,6 +55,12 @@ namespace Imtahanlar.Controllers
             return valid;
         }
 
+        public bool SignUp(Profil newProfile)
+        {
+            Profils.Add(newProfile);
+            return true;
+        }
+
         public bool AddNewUser(Profil profils)
         {
             Profils.Add(profils);
@@ -68,5 +72,6 @@ namespace Imtahanlar.Controllers
             Profils.RemoveAt(ID);
             return true;
         }
+
     }
 }

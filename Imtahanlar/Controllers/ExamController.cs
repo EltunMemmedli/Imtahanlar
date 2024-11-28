@@ -14,8 +14,16 @@ namespace Imtahanlar.Controllers
     {
         QuestionController questions = new();
 
+
+        FileService File = new();
+
+
         ArrayList Exams;
 
+        public ExamController(QuestionController questionsInstance)
+        {
+            questions = questionsInstance;
+        }
 
         public ExamController()
         {
@@ -37,71 +45,23 @@ namespace Imtahanlar.Controllers
             }
         }
 
-        public void StartExam(string category, string name, string surname)
+        public void StartExam(string name, string surname, string category)
         {
             ArrayList Questions = questions.GetQuestions();
 
-            if(Questions.Count == 0)
+            if (Questions.Count == 0)
             {
-                Console.WriteLine("bos");
+                Console.WriteLine("Can not find the questions");
                 return;
             }
-            int a = 0;
-            int s = 0;
 
-            if(category.ToLower() == ExamCategory.Riyaziyyat.ToString().ToLower())
+            int a = 0, s = 0;
+
+            foreach (Question sual in Questions)
             {
-                foreach (Question sual in Questions)
+                if (sual.Category.ToString().ToLower() == category.ToLower())
                 {
-
-                        Console.WriteLine($"{sual.Questions}\n" +
-                                          $"A) {sual.FirstVariant}\n" +
-                                          $"B) {sual.SecondVariant}\n" +
-                                          $"C) {sual.ThirdVariant}");
-
-                        string cavab = Console.ReadLine();
-
-                        if (cavab.ToLower() == sual.TrueVariant.ToLower())
-                        {
-                            a++;
-                        }
-                        else
-                        {
-                            s++;
-                        }
-                    
-                }
-            }
-            else if(category.ToLower() == ExamCategory.Tarix.ToString().ToLower())
-            {
-                foreach (Question sual in Questions)
-                {
-
-
-                        Console.WriteLine($"{sual.Questions}\n" +
-                                          $"A) {sual.FirstVariant}\n" +
-                                          $"B) {sual.SecondVariant}\n" +
-                                          $"C) {sual.ThirdVariant}");
-
-                        string cavab = Console.ReadLine();
-
-                        if (cavab.ToLower() == sual.TrueVariant.ToLower())
-                        {
-                            a++;
-                        }
-                        else
-                        {
-                            s++;
-                        }
-                    
-                }
-            }
-            else if(category.ToLower() == ExamCategory.IT.ToString().ToLower())
-            {
-                foreach (Question sual in Questions)
-                {
-
-
+                    Console.Clear();
                     Console.WriteLine($"{sual.Questions}\n" +
                                       $"A) {sual.FirstVariant}\n" +
                                       $"B) {sual.SecondVariant}\n" +
@@ -117,17 +77,25 @@ namespace Imtahanlar.Controllers
                     {
                         s++;
                     }
-
                 }
             }
 
             int total = a + s;
-            double resultPercentage = total > 0 ? (double)a / total * 100 : 0; // Faiz hesablanır
-            string status = resultPercentage >= 50 ? "İmtahandan keçib!" : "İmtahandan keçməyib.";
+            double resultPercentage = total > 0 ? (double)a / total * 100 : 0;
+            string status = resultPercentage >= 50 ? "Passed!" : "Did not passed!";
 
-            /* Console.WriteLine($"Netice: {resultPercentage}% {status}");*/
+            Console.WriteLine($"Name: {name}, \nSurname: {surname}, \nResult: {resultPercentage}% ,\nStatus:{status}");
 
             Result newResult = new(name, surname, resultPercentage, status);
+
+
+            File.WriteToFile(newResult);
+        }
+
+        public void SeeResults()
+        {
+            File.ReadFromFile();
         }
     }
+
 }

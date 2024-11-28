@@ -18,7 +18,7 @@ namespace Imtahanlar.Model
             this.Name = name;
             this.Surname = surname;
             this.ExamPercentage = ExamPercentage;
-            Status = status;
+            this.Status = status;
 
         }
     }
